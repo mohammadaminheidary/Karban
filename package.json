@@ -1,27 +1,24 @@
 {
   "name": "karban",
   "version": "1.0.0",
-  "description": "**Karban** is a modern business management platform designed to simplify and centralize daily operations, financial management, customer records, orders, work schedules, tasks, and business reporting in one place.",
+  "description": "Karban Management System",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch"
+    "dev": "tailwindcss -i ./src/input.css -o ./src/output.css --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mohammadaminheidary/Karban.git"
-  },
-  "keywords": [],
+  "keywords": [
+    "tailwindcss",
+    "karban"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/mohammadaminheidary/Karban/issues"
-  },
-  "homepage": "https://github.com/mohammadaminheidary/Karban#readme",
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",
-    "lightningcss-linux-x64-gnu": "^1.33.0",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "prettier-plugin-tailwindcss": "^0.8.1"
   }
 }
