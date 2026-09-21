@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+src/output.css
 
 # Environment variables
 .env
@@ -19,5 +20,3 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
-
-src/output.css
