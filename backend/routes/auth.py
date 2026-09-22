@@ -8,11 +8,16 @@ from schemas.auth_schema import LoginRequest
 
 from services.auth_service import authenticate_user
 
+from security.jwt import create_access_token
+
 
 
 router = APIRouter(
+
     prefix="/api",
+
     tags=["Authentication"]
+
 )
 
 
@@ -38,7 +43,9 @@ def login(
     )
 
 
+
     if not user:
+
 
         return {
 
@@ -51,19 +58,25 @@ def login(
 
 
 
+    token = create_access_token({
+
+        "sub": user.username
+
+    })
+
+
+
     return {
 
         "success": True,
 
-        "message":
-        "ورود موفق بود",
+        "token": token,
 
         "user": {
 
             "id": user.id,
 
-            "username":
-            user.username
+            "username": user.username
 
         }
 

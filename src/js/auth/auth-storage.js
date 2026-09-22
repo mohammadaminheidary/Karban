@@ -8,10 +8,14 @@ export function saveAuth(data) {
   );
 }
 
-export function getAuth() {
-  const data = localStorage.getItem(AUTH_KEY);
+export function getToken() {
+  const auth = localStorage.getItem(AUTH_KEY);
 
-  return data ? JSON.parse(data) : null;
+  if (!auth) {
+    return null;
+  }
+
+  return JSON.parse(auth).token;
 }
 
 export function logout() {
