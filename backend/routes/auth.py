@@ -10,7 +10,9 @@ from services.auth_service import authenticate_user
 
 from security.jwt import create_access_token
 
+from security.auth import get_current_user
 
+from models.user import User
 
 router = APIRouter(
 
@@ -80,4 +82,19 @@ def login(
 
         }
 
+    }
+
+@router.get("/auth/me")
+def get_me(
+    current_user: User = Depends(
+        get_current_user
+    )
+):
+
+    return {
+        "success": True,
+        "user": {
+            "id": current_user.id,
+            "username": current_user.username
+        }
     }
