@@ -40,3 +40,7 @@ export function getToken() {
     return null;
   }
 }
+
+export function logout() {
+  localStorage.removeItem("karbon_auth");
+}
