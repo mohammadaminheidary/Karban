@@ -11,13 +11,32 @@ export function saveAuth(data) {
 export function getToken() {
   const auth = localStorage.getItem(AUTH_KEY);
 
+
   if (!auth) {
     return null;
   }
 
-  return JSON.parse(auth).token;
-}
 
-export function logout() {
-  localStorage.removeItem(AUTH_KEY);
+  try {
+    const parsedAuth = JSON.parse(auth);
+
+
+    if (
+      !parsedAuth ||
+      typeof parsedAuth.token !== "string" ||
+      !parsedAuth.token.trim()
+    ) {
+      localStorage.removeItem(AUTH_KEY);
+
+      return null;
+    }
+
+
+    return parsedAuth.token;
+
+  } catch (error) {
+    localStorage.removeItem(AUTH_KEY);
+
+    return null;
+  }
 }
