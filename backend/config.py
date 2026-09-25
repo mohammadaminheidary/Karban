@@ -1,9 +1,24 @@
 from pathlib import Path
 
 
-BASE_DIR = Path(__file__).resolve().parent
+APP_DATA_DIR = (
+    Path.home()
+    / ".karbon"
+)
+
+
+APP_DATA_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+
+DATABASE_PATH = (
+    APP_DATA_DIR
+    / "karbon.db"
+)
 
 
 DATABASE_URL = (
-    f"sqlite:///{BASE_DIR}/karbon.db"
+    f"sqlite:///{DATABASE_PATH.as_posix()}"
 )
