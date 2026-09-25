@@ -6,6 +6,9 @@ src/output.css
 .env
 .env.*
 
+# Local database
+backend/karbon.db
+backend/karbon.db.bak
 # Build output
 dist/
 build/

@@ -1,3 +1,5 @@
+from getpass import getpass
+
 from database import Base, engine, SessionLocal
 
 from models.user import User
@@ -11,26 +13,74 @@ Base.metadata.create_all(bind=engine)
 
 
 
-db = SessionLocal()
+password = getpass("New admin password: ")
+password_confirm = getpass("Repeat admin password: ")
 
 
+if password != password_confirm:
+    raise ValueError("Passwords do not match")
 
-user = User(
 
-    username="admin",
-
-    password_hash=hash_password("123456")
-
+password_length = len(
+    password.encode("utf-8")
 )
 
 
-
-db.add(user)
-
-db.commit()
-
-db.close()
+if password_length < 8:
+    raise ValueError(
+        "Password must be at least 8 bytes long"
+    )
 
 
+if password_length > 72:
+    raise ValueError(
+        "Password must not exceed 72 bytes"
+    )
 
-print("User created")
+
+db = SessionLocal()
+
+
+try:
+
+    user = (
+        db.query(User)
+        .filter(User.username == "admin")
+        .first()
+    )
+
+
+    if user:
+
+        user.password_hash = hash_password(
+            password
+        )
+
+        message = "Admin password updated"
+
+    else:
+
+        user = User(
+
+            username="admin",
+
+            password_hash=hash_password(
+                password
+            )
+
+        )
+
+        db.add(user)
+
+        message = "Admin user created"
+
+
+    db.commit()
+
+
+finally:
+
+    db.close()
+
+
+print(message)
