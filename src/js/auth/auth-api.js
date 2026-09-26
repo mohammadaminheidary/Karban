@@ -30,6 +30,16 @@ export async function loginUser(username, password) {
     };
   }
 
+  if (response.status === 429) {
+    return {
+      success: false,
+
+      message:
+        data?.detail ||
+        "تعداد تلاش‌های ورود بیش از حد مجاز است. کمی بعد دوباره تلاش کنید.",
+    };
+  }
+
   if (!response.ok) {
     throw new Error(`Login request failed: ${response.status}`);
   }
