@@ -18,7 +18,7 @@ export function initLogin() {
 
     const username = document.getElementById("username").value.trim();
 
-    const password = document.getElementById("passwordInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
 
     // بررسی ورودی‌ها
     const validation = validateLogin(username, password);
