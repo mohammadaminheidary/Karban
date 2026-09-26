@@ -20,35 +20,24 @@ Base.metadata.create_all(
 
 # تنظیم CORS برای اتصال Frontend
 app.add_middleware(
-
     CORSMiddleware,
 
     allow_origins=[
-
-        # Live Server VS Code
         "http://127.0.0.1:5501",
         "http://localhost:5501",
-
-        # در صورت استفاده از پورت 5500
-        "http://127.0.0.1:5500",
-        "http://localhost:5500"
-
     ],
 
-    allow_credentials=True,
+    allow_credentials=False,
 
     allow_methods=[
-
-        "*"
-
+        "GET",
+        "POST",
     ],
 
     allow_headers=[
-
-        "*"
-
-    ]
-
+        "Content-Type",
+        "Authorization",
+    ],
 )
 
 
