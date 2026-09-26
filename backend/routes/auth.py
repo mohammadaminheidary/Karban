@@ -2,6 +2,7 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
+    Request,
     status,
 )
 
@@ -22,6 +23,12 @@ from security.jwt import create_access_token
 
 from security.auth import get_current_user
 
+from security.login_rate_limit import (
+    check_login_rate_limit,
+    clear_login_failures,
+    record_login_failure,
+)
+
 
 router = APIRouter(
     prefix="/api",
@@ -35,8 +42,38 @@ router = APIRouter(
 )
 def login(
     data: LoginRequest,
+    request: Request,
     db: Session = Depends(get_database),
 ):
+
+    client_key = (
+        request.client.host
+        if request.client
+        else "unknown"
+    )
+
+
+    is_limited, retry_after = (
+        check_login_rate_limit(
+            client_key
+        )
+    )
+
+
+    if is_limited:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=(
+                "تعداد تلاش‌های ورود بیش از حد مجاز است. "
+                "کمی بعد دوباره تلاش کنید."
+            ),
+            headers={
+                "Retry-After": str(
+                    retry_after
+                )
+            },
+        )
+
 
     user = authenticate_user(
         db,
@@ -44,17 +81,31 @@ def login(
         data.password,
     )
 
+
     if not user:
+        record_login_failure(
+            client_key
+        )
+
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="نام کاربری یا رمز عبور اشتباه است",
+            detail=(
+                "نام کاربری یا رمز عبور اشتباه است"
+            ),
         )
+
+
+    clear_login_failures(
+        client_key
+    )
+
 
     token = create_access_token(
         {
             "sub": user.username,
         }
     )
+
 
     return {
         "success": True,
@@ -68,7 +119,9 @@ def login(
 
 @router.get("/auth/me")
 def get_me(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(
+        get_current_user
+    ),
 ):
 
     return {
