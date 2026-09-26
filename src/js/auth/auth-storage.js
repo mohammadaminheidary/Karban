@@ -1,10 +1,22 @@
 const AUTH_KEY = "karbon_auth";
 
 export function saveAuth(data) {
+  if (
+    !data ||
+    typeof data.token !== "string" ||
+    !data.token.trim()
+  ) {
+    throw new Error(
+      "Invalid authentication data"
+    );
+  }
+
+
   localStorage.setItem(
     AUTH_KEY,
-
-    JSON.stringify(data),
+    JSON.stringify({
+      token: data.token,
+    })
   );
 }
 
