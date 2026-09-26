@@ -18,8 +18,17 @@ class LoginRequest(BaseModel):
 
 
 
+class LoginUser(BaseModel):
+
+    id: int
+
+    username: str
+
+
 class LoginResponse(BaseModel):
 
     success: bool
 
-    message: str
+    token: str
+
+    user: LoginUser

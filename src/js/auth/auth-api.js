@@ -1,6 +1,5 @@
 const API_URL = "http://127.0.0.1:8000/api";
 
-
 export async function loginUser(username, password) {
   const response = await fetch(`${API_URL}/login`, {
     method: "POST",
@@ -15,15 +14,28 @@ export async function loginUser(username, password) {
     }),
   });
 
+  let data = null;
 
-  if (!response.ok) {
-    throw new Error("Server error");
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = null;
   }
 
+  if (response.status === 401) {
+    return {
+      success: false,
 
-  return await response.json();
+      message: data?.detail || "نام کاربری یا رمز عبور اشتباه است",
+    };
+  }
+
+  if (!response.ok) {
+    throw new Error(`Login request failed: ${response.status}`);
+  }
+
+  return data;
 }
-
 
 export async function validateToken(token) {
   const response = await fetch(`${API_URL}/auth/me`, {
@@ -34,16 +46,13 @@ export async function validateToken(token) {
     },
   });
 
-
   if (response.status === 401) {
     return null;
   }
 
-
   if (!response.ok) {
     throw new Error("Server error");
   }
-
 
   return await response.json();
 }
